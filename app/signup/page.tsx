@@ -41,8 +41,8 @@ export default function SignupPage() {
 
             // Redirect to login on success
             router.push('/login?registered=true');
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An unexpected error occurred');
         } finally {
             setLoading(false);
         }

@@ -12,7 +12,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
     return bcrypt.compare(password, hash);
 }
 
-export async function signToken(payload: any): Promise<string> {
+export async function signToken(payload: Record<string, unknown>): Promise<string> {
     return new SignJWT(payload)
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()

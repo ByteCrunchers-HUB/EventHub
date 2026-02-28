@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         // Hash password
         const passwordHash = await hashPassword(password);
 
-        let role = accountType === 'college' ? 'COLLEGE_ADMIN' : 'STUDENT';
+        const role = accountType === 'college' ? 'COLLEGE_ADMIN' : 'STUDENT';
         let collegeId = null;
 
         // Handle College creation logic if account type is college

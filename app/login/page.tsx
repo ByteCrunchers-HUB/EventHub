@@ -49,8 +49,8 @@ export default function LoginPage() {
             // but for now, just navigating is fine.
             router.refresh();
 
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An unexpected error occurred');
         } finally {
             setLoading(false);
         }
