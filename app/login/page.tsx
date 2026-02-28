@@ -68,7 +68,7 @@ export default function LoginPage() {
             <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '400px', padding: 'var(--space-8)', zIndex: 1 }}>
                 <div style={{ textAlign: 'center', marginBottom: 'var(--space-8)' }}>
                     <h1 style={{ fontSize: '2rem', marginBottom: 'var(--space-2)' }}>Welcome Back</h1>
-                    <p style={{ color: 'var(--color-text-muted)' }}>Sign in to continue to EventHub</p>
+                    <p style={{ color: 'var(--color-text-muted)' }}>Sign in to continue to EventHUB</p>
                 </div>
 
                 {error && (

@@ -34,7 +34,7 @@ export default function SystemAdminDashboard() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <h1 style={{ fontSize: '2rem', marginBottom: 'var(--space-1)' }}>Platform Monitoring</h1>
-                        <p style={{ color: 'var(--color-text-muted)' }}>Real-time metrics and verification queues across EventHub.</p>
+                        <p style={{ color: 'var(--color-text-muted)' }}>Real-time metrics and verification queues across EventHUB.</p>
                     </div>
                 </div>
 

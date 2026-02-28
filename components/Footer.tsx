@@ -1,6 +1,17 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Footer() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        fetch('/api/auth/me')
+            .then(res => setIsLoggedIn(res.ok))
+            .catch(() => setIsLoggedIn(false));
+    }, []);
+
     return (
         <footer style={{
             borderTop: '1px solid var(--color-border)',
@@ -16,7 +27,7 @@ export default function Footer() {
             }}>
                 <div>
                     <div style={{ fontWeight: 800, fontSize: '1.25rem', fontFamily: 'var(--font-display)', marginBottom: 'var(--space-4)' }}>
-                        Event<span className="gradient-text">Hub</span>
+                        EH <span className="gradient-text">EventHub</span>
                     </div>
                     <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>
                         The ultimate campus engagement platform.
@@ -24,18 +35,19 @@ export default function Footer() {
                 </div>
 
                 <div>
-                    <h4 style={{ marginBottom: 'var(--space-4)' }}>For Students</h4>
+                    <h4 style={{ marginBottom: 'var(--space-4)' }}>Navigation</h4>
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                         <li><Link href="/explore" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Explore Events</Link></li>
-                        <li><Link href="/profile" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>My Profile</Link></li>
+                        {isLoggedIn && <li><Link href="/profile" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>My Profile</Link></li>}
+                        <li><Link href="/about" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>About Us</Link></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 style={{ marginBottom: 'var(--space-4)' }}>For Colleges</h4>
+                    <h4 style={{ marginBottom: 'var(--space-4)' }}>Portals</h4>
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-                        <li><Link href="/college" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Dashboard</Link></li>
-                        <li><Link href="/college/create" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Host an Event</Link></li>
+                        <li><Link href="/college" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Admin Dashboard</Link></li>
+                        {!isLoggedIn && <li><Link href="/login" style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Member Login</Link></li>}
                     </ul>
                 </div>
 
@@ -59,7 +71,7 @@ export default function Footer() {
                 color: 'var(--color-text-muted)',
                 fontSize: '0.875rem'
             }}>
-                <p>&copy; {new Date().getFullYear()} EventHub. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} EventHUB. All rights reserved.</p>
                 <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
                     <span>Campus Engagement Platform</span>
                 </div>

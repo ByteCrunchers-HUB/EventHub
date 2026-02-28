@@ -1,6 +1,28 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import SplashScreen from '@/components/SplashScreen';
 import Link from 'next/link';
 
 export default function Home() {
+  const router = useRouter();
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true);
+      // Redirect to login for faster initial user experience
+      router.push('/login');
+    }, 1800); // Reduced delay for snappier feel
+
+    return () => clearTimeout(timer);
+  }, [router]);
+
+  if (!showContent) {
+    return <SplashScreen />;
+  }
+
   return (
     <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
       {/* Dynamic Background Elements */}

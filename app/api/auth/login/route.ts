@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { verifyPassword, signToken } from '@/lib/auth';
+import { verifyPassword } from '@/lib/password';
+import { signToken } from '@/lib/auth';
 
 export async function POST(request: Request) {
     try {
@@ -42,11 +43,13 @@ export async function POST(request: Request) {
             token
         }, { status: 200 });
 
-        // Set HttpOnly cookie for security (mocked token for now)
+        // Set HttpOnly cookie for security
         response.cookies.set({
             name: 'auth_token',
             value: token,
-            httpOnly: false, // Let client access for demo purposes, in prod should be true
+            httpOnly: true, // Secure, not accessible by client JS
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
             path: '/',
             maxAge: 60 * 60 * 24 * 7 // 1 week
         });

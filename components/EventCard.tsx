@@ -19,18 +19,27 @@ export default function EventCard({ event }: { event: EventProps }) {
                 flexDirection: 'column',
                 height: '100%',
             }}>
-                {/* Placeholder for Image */}
+                {/* Event Image or Placeholder */}
                 <div style={{
                     height: '160px',
-                    background: `linear-gradient(45deg, var(--color-surface), rgba(var(--hue-primary), 50%, 50%, 0.1))`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'var(--color-primary)',
-                    fontSize: '2rem',
-                    borderBottom: '1px solid var(--color-border)'
+                    borderBottom: '1px solid var(--color-border)',
+                    overflow: 'hidden',
+                    background: event.imageUrl ? 'none' : `linear-gradient(45deg, var(--color-surface), rgba(var(--hue-primary), 50%, 50%, 0.1))`
                 }}>
-                    {event.category === 'Tech' ? '💻' : event.category === 'Cultural' ? '🎭' : '📅'}
+                    {event.imageUrl ? (
+                        <img
+                            src={event.imageUrl}
+                            alt={event.title}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                    ) : (
+                        <div style={{ fontSize: '2rem', color: 'var(--color-primary)' }}>
+                            {event.category === 'Tech' ? '💻' : event.category === 'Cultural' ? '🎭' : '📅'}
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ padding: 'var(--space-4)', flex: 1, display: 'flex', flexDirection: 'column' }}>

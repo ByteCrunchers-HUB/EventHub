@@ -8,9 +8,11 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
 
 export const metadata: Metadata = {
-  title: 'EventHub | The Pulse of Campus Life',
+  title: 'EventHUB | The Pulse of Campus Life',
   description: 'A centralized campus engagement platform where every student finds their stage and every college manages events effortlessly.',
 };
+
+import { ThemeProvider } from '@/components/ThemeContext';
 
 export default function RootLayout({
   children,
@@ -20,12 +22,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${outfit.variable}`}>
-        <Navbar />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {children}
-        </div>
-        <Footer />
+        <ThemeProvider>
+          <Navbar />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            {children}
+          </div>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+

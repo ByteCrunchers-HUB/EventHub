@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { hashPassword, signToken } from '@/lib/auth';
+import { hashPassword } from '@/lib/password';
+import { signToken } from '@/lib/auth';
 
 export async function POST(request: Request) {
     try {
@@ -27,15 +28,17 @@ export async function POST(request: Request) {
         const role = accountType === 'college' ? 'COLLEGE_ADMIN' : 'STUDENT';
         let collegeId = null;
 
-        // Handle College creation logic if account type is college
+        // Handle College logic if account type is college
         if (role === 'COLLEGE_ADMIN') {
             if (!collegeName) {
                 return NextResponse.json({ error: 'College Name is required for College Admin accounts.' }, { status: 400 });
             }
 
-            // Create the college (in a real app, this might go to a verification queue first)
-            const college = await prisma.college.create({
-                data: {
+            // Use upsert to handle existing college names
+            const college = await prisma.college.upsert({
+                where: { name: collegeName },
+                update: {}, // Don't change anything if it exists
+                create: {
                     name: collegeName,
                     isVerified: true // Auto verify for this demo
                 }
@@ -58,8 +61,7 @@ export async function POST(request: Request) {
         // Generate JWT
         const token = await signToken({ userId: user.id, email: user.email, role: user.role, collegeId: user.collegeId });
 
-        // Setup response (could also set httponly cookie here)
-        return NextResponse.json({
+        const response = NextResponse.json({
             message: 'User created successfully',
             user: {
                 id: user.id,
@@ -68,6 +70,19 @@ export async function POST(request: Request) {
             },
             token
         }, { status: 201 });
+
+        // Set HttpOnly cookie for seamless session
+        response.cookies.set({
+            name: 'auth_token',
+            value: token,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 60 * 60 * 24 * 7 // 1 week
+        });
+
+        return response;
 
     } catch (error) {
         console.error('Signup error:', error);

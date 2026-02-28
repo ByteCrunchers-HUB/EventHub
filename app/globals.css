@@ -7,19 +7,23 @@
   --hue-accent: 180;
   /* Cyan/Teal */
 
-  /* Light Theme Palette */
+  /* Default (Light) Theme Palette */
   --color-bg: hsl(220, 20%, 97%);
   --color-surface: hsl(0, 0%, 100%);
   --color-surface-hover: hsl(220, 20%, 94%);
   --color-text: hsl(220, 30%, 15%);
   --color-text-muted: hsl(220, 15%, 45%);
-
   --color-primary: hsl(var(--hue-primary), 80%, 50%);
   --color-primary-hover: hsl(var(--hue-primary), 80%, 45%);
   --color-secondary: hsl(var(--hue-secondary), 80%, 50%);
   --color-accent: hsl(var(--hue-accent), 90%, 45%);
-
   --color-border: hsl(220, 20%, 90%);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px -3px hsl(var(--hue-primary) 80% 50% / 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -43,38 +47,29 @@
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-glow: 0 0 15px -3px hsl(var(--hue-primary) 80% 50% / 0.3);
-
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark Theme Palette */
-    --color-bg: hsl(220, 40%, 4%);
-    --color-surface: hsl(220, 35%, 8%);
-    --color-surface-hover: hsl(220, 30%, 12%);
-    --color-text: hsl(220, 20%, 95%);
-    --color-text-muted: hsl(220, 15%, 65%);
-
-    --color-primary: hsl(var(--hue-primary), 85%, 60%);
-    --color-primary-hover: hsl(var(--hue-primary), 85%, 65%);
-    --color-secondary: hsl(var(--hue-secondary), 85%, 60%);
-    --color-accent: hsl(var(--hue-accent), 90%, 55%);
-
-    --color-border: hsl(220, 30%, 15%);
-
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-    --shadow-glow: 0 0 20px -3px hsl(var(--hue-primary) 85% 60% / 0.4);
-  }
+.dark-theme {
+  --color-bg: hsl(220, 40%, 4%);
+  --color-surface: hsl(220, 35%, 8%);
+  --color-surface-hover: hsl(220, 30%, 12%);
+  --color-text: hsl(220, 20%, 95%);
+  --color-text-muted: hsl(220, 15%, 65%);
+  --color-primary: hsl(var(--hue-primary), 85%, 60%);
+  --color-primary-hover: hsl(var(--hue-primary), 85%, 65%);
+  --color-secondary: hsl(var(--hue-secondary), 85%, 60%);
+  --color-accent: hsl(var(--hue-accent), 90%, 55%);
+  --color-border: hsl(220, 30%, 15%);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-glow: 0 0 20px -3px hsl(var(--hue-primary) 85% 60% / 0.4);
+  --glass-bg: rgba(15, 15, 20, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 /* Base Resets & Styles */
@@ -125,10 +120,10 @@ button {
 
 /* Utilities */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: var(--radius-lg);
 }
 
