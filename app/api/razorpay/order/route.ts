@@ -19,6 +19,11 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
 
+        // Block admins from registering/paying
+        if (payload.role === 'COLLEGE_ADMIN' || payload.role === 'SYSTEM_ADMIN') {
+            return NextResponse.json({ error: 'Admins cannot register or pay for events' }, { status: 403 });
+        }
+
         const { amount, eventId } = await request.json();
 
         if (!amount || !eventId) {

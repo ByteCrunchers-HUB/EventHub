@@ -57,7 +57,14 @@ export default function EventDetailsPage({ params: paramsPromise }: { params: Pr
                     body: JSON.stringify({ amount: event.price, eventId: event.id })
                 });
 
-                if (!orderRes.ok) throw new Error('Failed to create payment order');
+                if (!orderRes.ok) {
+                    const data = await orderRes.json();
+                    if (orderRes.status === 401) {
+                        router.push('/login');
+                        return;
+                    }
+                    throw new Error(data.error || 'Failed to create payment order');
+                }
                 const orderData = await orderRes.json();
 
                 // 2. Open Razorpay Checkout
