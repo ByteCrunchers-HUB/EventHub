@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import ShareButtons from '@/components/ShareButtons';
 
 interface EventData {
     id: string;
@@ -280,6 +281,11 @@ export default function EventDetailsPage({ params: paramsPromise }: { params: Pr
                             </button>
                         </div>
                     )}
+
+                    <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: 'var(--space-6)', marginTop: 'var(--space-2)' }}>
+                        <ShareButtons url={typeof window !== 'undefined' ? window.location.href : ''} title={event.title} />
+                    </div>
+
                     <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
                         By registering, you agree to the EventHUB terms and campus guidelines.
                     </p>
