@@ -187,6 +187,14 @@ export default function ProfilePage() {
                                                     <Link href={`/college/events/${event.id}/manage`} className="btn-primary" style={{ padding: 'var(--space-2) var(--space-4)', fontSize: '0.875rem', width: '100%', display: 'block', textAlign: 'center' }}>
                                                         Manage
                                                     </Link>
+                                                ) : item.status === 'ATTENDED' ? (
+                                                    <button
+                                                        onClick={() => handleDownloadCertificate(item.id)}
+                                                        className="btn-primary"
+                                                        style={{ padding: 'var(--space-2) var(--space-4)', fontSize: '0.875rem', border: 'none', width: '100%' }}
+                                                    >
+                                                        Download Certificate
+                                                    </button>
                                                 ) : (
                                                     <Link href={`/explore/${event.id}`} className="btn-primary" style={{ padding: 'var(--space-2) var(--space-4)', fontSize: '0.875rem', width: '100%', display: 'block', textAlign: 'center' }}>
                                                         View Info
