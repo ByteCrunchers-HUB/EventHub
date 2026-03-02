@@ -72,6 +72,21 @@ export async function GET(request: NextRequest) {
             applyDefaultStyling(doc);
         }
 
+        // Add Event Logo/Image if exists
+        if (registration.event.imageUrl) {
+            try {
+                const logoPath = path.join(process.cwd(), 'public', registration.event.imageUrl);
+                if (fs.existsSync(logoPath)) {
+                    const logoBuffer = fs.readFileSync(logoPath);
+                    const logoBase64 = `data:image/png;base64,${logoBuffer.toString('base64')}`;
+                    // Place logo in top right
+                    doc.addImage(logoBase64, 'PNG', 240, 20, 30, 30);
+                }
+            } catch (e) {
+                console.error('Failed to load event logo:', e);
+            }
+        }
+
         // Overlay Text
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(40);
@@ -106,8 +121,9 @@ export async function GET(request: NextRequest) {
         doc.text(`Certificate ID: ${registration.id.slice(0, 8).toUpperCase()}`, 148.5, 185, { align: 'center' });
 
         const pdfOutput = doc.output('arraybuffer');
+        const buffer = Buffer.from(pdfOutput);
 
-        return new NextResponse(pdfOutput, {
+        return new NextResponse(buffer, {
             headers: {
                 'Content-Type': 'application/pdf',
                 'Content-Disposition': `attachment; filename="Certificate_${registration.event.title.replace(/\s+/g, '_')}.pdf"`

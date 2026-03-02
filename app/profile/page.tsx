@@ -79,8 +79,27 @@ export default function ProfilePage() {
         ? (user.college?.events || []).filter(e => new Date(e.date) < new Date())
         : user.registrations.filter(r => new Date(r.event.date) < new Date());
 
-    const handleDownloadCertificate = (registrationId: string) => {
-        window.open(`/api/certificates?registrationId=${registrationId}`, '_blank');
+    const handleDownloadCertificate = async (registrationId: string) => {
+        try {
+            const res = await fetch(`/api/certificates?registrationId=${registrationId}`);
+            if (!res.ok) {
+                const error = await res.json();
+                alert(error.error || 'Failed to download certificate');
+                return;
+            }
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Certificate_${registrationId.slice(0, 8)}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('An error occurred while downloading the certificate.');
+        }
     };
 
     return (
@@ -236,7 +255,7 @@ export default function ProfilePage() {
                                             </div>
 
                                             <div style={{ width: '100%', maxWidth: '200px' }}>
-                                                {isAttended && (
+                                                {isAttended ? (
                                                     <button
                                                         onClick={() => handleDownloadCertificate(item.id)}
                                                         className="btn-primary"
@@ -244,9 +263,12 @@ export default function ProfilePage() {
                                                     >
                                                         Download Certificate
                                                     </button>
-                                                )}
-                                                {isAbsent && (
+                                                ) : isAbsent ? (
                                                     <span style={{ fontSize: '0.875rem', color: '#ef4444', fontWeight: 600 }}>No Certificate (Absent)</span>
+                                                ) : (
+                                                    <Link href={`/explore/${event.id}`} className="btn-primary" style={{ padding: 'var(--space-2) var(--space-4)', fontSize: '0.875rem', width: '100%', display: 'block', textAlign: 'center' }}>
+                                                        View Info
+                                                    </Link>
                                                 )}
                                             </div>
                                         </div>
