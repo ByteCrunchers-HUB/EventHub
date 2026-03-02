@@ -47,78 +47,79 @@ export async function GET(request: NextRequest) {
             format: 'a4'
         });
 
+        // 1. Template
         if (registration.event.certificateTemplateUrl) {
-            // Use custom template
             try {
-                // In a production Next.js app on Vercel, public files might not be directly accessible via fs easily.
-                // But since we are running locally and writing to public/uploads, we can try to get the base64.
-                // Alternatively, we can use the URL if we were in a browser, but we are in a route handler.
-                const templatePath = path.join(process.cwd(), 'public', registration.event.certificateTemplateUrl);
-
+                const templatePath = path.join(process.cwd(), 'public', registration.event.certificateTemplateUrl.replace(/^\//, ''));
                 if (fs.existsSync(templatePath)) {
+                    const ext = path.extname(templatePath).toLowerCase().replace('.', '');
+                    const format = (ext === 'jpg' || ext === 'jpeg') ? 'JPEG' : (ext === 'webp' ? 'WEBP' : 'PNG');
                     const imageBuffer = fs.readFileSync(templatePath);
-                    const base64Image = `data:image/png;base64,${imageBuffer.toString('base64')}`;
-                    doc.addImage(base64Image, 'PNG', 0, 0, 297, 210);
+                    doc.addImage(imageBuffer, format, 0, 0, 297, 210);
                 } else {
-                    // Fallback to default styling if file not found
                     applyDefaultStyling(doc);
                 }
             } catch (e) {
-                console.error('Failed to load template image:', e);
+                console.error('Failed to load template:', e);
                 applyDefaultStyling(doc);
             }
         } else {
-            // Default styling
             applyDefaultStyling(doc);
         }
 
-        // Add Event Logo/Image if exists
+        // 2. Event Logo
         if (registration.event.imageUrl) {
             try {
-                const logoPath = path.join(process.cwd(), 'public', registration.event.imageUrl);
+                const logoPath = path.join(process.cwd(), 'public', registration.event.imageUrl.replace(/^\//, ''));
                 if (fs.existsSync(logoPath)) {
+                    const ext = path.extname(logoPath).toLowerCase().replace('.', '');
+                    const format = (ext === 'jpg' || ext === 'jpeg') ? 'JPEG' : (ext === 'webp' ? 'WEBP' : 'PNG');
                     const logoBuffer = fs.readFileSync(logoPath);
-                    const logoBase64 = `data:image/png;base64,${logoBuffer.toString('base64')}`;
-                    // Place logo in top right
-                    doc.addImage(logoBase64, 'PNG', 240, 20, 30, 30);
+                    // Place logo top-right
+                    doc.addImage(logoBuffer, format, 247, 10, 40, 40);
                 }
             } catch (e) {
-                console.error('Failed to load event logo:', e);
+                console.error('Failed to load logo:', e);
             }
         }
 
-        // Overlay Text
+        // 3. Overlay Content
+        // Shadow/Glow effect for the main title
         doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255, 255, 255); // White shadow
         doc.setFontSize(40);
-        doc.setTextColor(30, 41, 59);
-        // Position slightly adjusted depending on template, but we'll stick to center
+        doc.text('CERTIFICATE OF PARTICIPATION', 148.5, 60.5, { align: 'center' });
+        doc.setTextColor(30, 41, 59); // Main color
         doc.text('CERTIFICATE OF PARTICIPATION', 148.5, 60, { align: 'center' });
 
-        doc.setFontSize(20);
+        doc.setFontSize(22);
         doc.setFont('helvetica', 'normal');
         doc.text('This is to certify that', 148.5, 85, { align: 'center' });
 
+        // Highlight User Name
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(32);
+        doc.setFontSize(42); // Bigger name
         doc.setTextColor(37, 99, 235);
-        doc.text(`${registration.user.firstName} ${registration.user.lastName}`, 148.5, 105, { align: 'center' });
+        doc.text(`${registration.user.firstName} ${registration.user.lastName}`, 148.5, 110, { align: 'center' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(20);
+        doc.setTextColor(30, 41, 59);
+        doc.text('has successfully attended the event', 148.5, 130, { align: 'center' });
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(28);
+        doc.text(registration.event.title, 148.5, 150, { align: 'center' });
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(18);
-        doc.setTextColor(30, 41, 59);
-        doc.text('has successfully attended the event', 148.5, 125, { align: 'center' });
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(24);
-        doc.text(registration.event.title, 148.5, 145, { align: 'center' });
-
-        doc.setFont('helvetica', 'normal');
+        doc.text(`Held at ${registration.event.college.name}`, 148.5, 170, { align: 'center' });
         doc.setFontSize(16);
-        doc.text(`Held at ${registration.event.college.name} on ${new Date(registration.event.date).toLocaleDateString()}`, 148.5, 165, { align: 'center' });
+        doc.text(`On ${new Date(registration.event.date).toLocaleDateString()}`, 148.5, 180, { align: 'center' });
 
         doc.setFontSize(14);
         doc.setTextColor(100, 116, 139);
-        doc.text(`Certificate ID: ${registration.id.slice(0, 8).toUpperCase()}`, 148.5, 185, { align: 'center' });
+        doc.text(`Certificate ID: ${registration.id.slice(0, 8).toUpperCase()}`, 148.5, 200, { align: 'center' });
 
         const pdfOutput = doc.output('arraybuffer');
         const buffer = Buffer.from(pdfOutput);

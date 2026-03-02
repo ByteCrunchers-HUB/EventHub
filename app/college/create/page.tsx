@@ -73,6 +73,10 @@ export default function CreateEventPage() {
                 if (uploadRes.ok) {
                     const uploadData = await uploadRes.json();
                     imageUrl = uploadData.url;
+                } else {
+                    alert('Event image upload failed. Please try again or use a different image.');
+                    setLoading(false);
+                    return;
                 }
             }
 
@@ -89,6 +93,10 @@ export default function CreateEventPage() {
                 if (uploadRes.ok) {
                     const uploadData = await uploadRes.json();
                     certificateTemplateUrl = uploadData.url;
+                } else {
+                    alert('Certificate template upload failed. Please try again.');
+                    setLoading(false);
+                    return;
                 }
             }
 
