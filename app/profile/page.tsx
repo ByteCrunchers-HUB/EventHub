@@ -152,9 +152,14 @@ export default function ProfilePage() {
                     {/* Notifications / Broadcasts */}
                     {!isAdmin && user.college?.broadcasts && user.college.broadcasts.length > 0 && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-                            <h3 style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                                🔔 College Announcements
-                            </h3>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h3 style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                                    🔔 College Announcements
+                                </h3>
+                                <Link href="/notifications" className="nav-link" style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-primary)' }}>
+                                    View All →
+                                </Link>
+                            </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                                 {user.college.broadcasts.map((msg: any) => (
                                     <div key={msg.id} className="glass-panel" style={{

@@ -70,6 +70,9 @@ export default function Navbar() {
                 <nav className={`navbar-links ${isMenuOpen ? 'mobile-open' : ''}`}>
                     <Link href="/explore" className="nav-link" onClick={() => setIsMenuOpen(false)}>Explore</Link>
                     {user && (
+                        <Link href="/notifications" className="nav-link" onClick={() => setIsMenuOpen(false)}>Notifications</Link>
+                    )}
+                    {user && (
                         <Link href="/profile" className="nav-link" onClick={() => setIsMenuOpen(false)}>Profile</Link>
                     )}
                     {user && (user.role === 'COLLEGE_ADMIN' || user.role === 'SYSTEM_ADMIN') && (
