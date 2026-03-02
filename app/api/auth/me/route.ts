@@ -39,9 +39,13 @@ export async function GET(request: NextRequest) {
                                     select: { attendees: true }
                                 }
                             }
+                        },
+                        broadcasts: {
+                            orderBy: { createdAt: 'desc' },
+                            take: 10
                         }
                     }
-                },
+                } as any,
                 registrations: {
                     include: {
                         event: {

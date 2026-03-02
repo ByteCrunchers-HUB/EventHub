@@ -75,6 +75,9 @@ export default function CollegeDashboard() {
                         <Link href="/college/registrations" style={{ padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius-md)', color: 'var(--color-text-muted)', transition: 'all var(--transition-fast)' }} className="hover-elevate">
                             👥 Registrations
                         </Link>
+                        <Link href="/college/broadcasts" style={{ padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius-md)', color: 'var(--color-text-muted)', transition: 'all var(--transition-fast)' }} className="hover-elevate">
+                            📢 Announcements
+                        </Link>
                     </nav>
                 </div>
             </aside>

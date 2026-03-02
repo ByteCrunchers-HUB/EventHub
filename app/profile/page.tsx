@@ -33,7 +33,8 @@ interface User {
     role: string;
     college?: {
         name: string,
-        events: CollegeEvent[]
+        events: CollegeEvent[],
+        broadcasts: any[]
     };
     registrations: Registration[];
 }
@@ -128,6 +129,34 @@ export default function ProfilePage() {
 
                 {/* Right Column: Content Sections */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-10)', minWidth: 0 }}>
+
+                    {/* Notifications / Broadcasts */}
+                    {!isAdmin && user.college?.broadcasts && user.college.broadcasts.length > 0 && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                            <h3 style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                                🔔 College Announcements
+                            </h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                                {user.college.broadcasts.map((msg: any) => (
+                                    <div key={msg.id} className="glass-panel" style={{
+                                        padding: 'var(--space-4)',
+                                        borderLeft: `4px solid ${msg.type === 'URGENT' ? '#ef4444' : 'var(--color-primary)'}`,
+                                        background: msg.type === 'URGENT' ? 'rgba(239, 68, 68, 0.05)' : 'var(--color-surface)'
+                                    }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-1)' }}>
+                                            <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>{msg.title}</span>
+                                            <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                                                {new Date(msg.createdAt).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+                                            {msg.message}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Upcoming Events */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
