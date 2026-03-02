@@ -22,20 +22,20 @@ export async function POST(request: NextRequest) {
 
         const passwordHash = await hashPassword(password);
         const role = accountType === 'college' ? 'COLLEGE_ADMIN' : 'STUDENT';
-        let collegeId = null;
 
-        if (role === 'COLLEGE_ADMIN') {
-            if (!collegeName) {
-                return NextResponse.json({ error: 'Institution Name is required.' }, { status: 400 });
-            }
-
-            const college = await prisma.college.upsert({
-                where: { name: collegeName },
-                update: {},
-                create: { name: collegeName, isVerified: true }
-            });
-            collegeId = college.id;
+        if (!collegeName) {
+            return NextResponse.json({ error: 'Institution Name is required.' }, { status: 400 });
         }
+
+        const college = await prisma.college.upsert({
+            where: { name: collegeName },
+            update: {},
+            create: {
+                name: collegeName,
+                isVerified: role === 'COLLEGE_ADMIN' // Auto-verify if an admin signs up (or you can keep it false)
+            }
+        });
+        const collegeId = college.id;
 
         const user = await prisma.user.create({
             data: { firstName, lastName, email, passwordHash, role, collegeId }

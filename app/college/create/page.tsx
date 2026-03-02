@@ -18,7 +18,9 @@ export default function CreateEventPage() {
         startDate: '',
         endDate: '',
         location: '',
-        description: ''
+        description: '',
+        isPaid: false,
+        price: '0'
     });
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -101,6 +103,8 @@ export default function CreateEventPage() {
                     imageUrl,
                     certificateTemplateUrl,
                     date: formData.startDate,
+                    isPaid: formData.isPaid,
+                    price: parseFloat(formData.price) || 0,
                 }),
             });
 
@@ -202,6 +206,46 @@ export default function CreateEventPage() {
                                     }}
                                 />
                             </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-2)', borderBottom: '1px solid var(--color-border)' }}>Pricing & Accessibility</h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-6)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+                                <input
+                                    type="checkbox"
+                                    id="isPaid"
+                                    name="isPaid"
+                                    checked={formData.isPaid}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.checked }))}
+                                    style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                                />
+                                <label htmlFor="isPaid" style={{ fontSize: '1rem', fontWeight: 500, cursor: 'pointer' }}>Is this a paid event?</label>
+                            </div>
+                            {formData.isPaid && (
+                                <div className="animate-fade-in">
+                                    <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.875rem', fontWeight: 500 }}>Ticket Price (INR) *</label>
+                                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                        <span style={{ position: 'absolute', left: '12px', color: 'var(--color-text-muted)' }}>₹</span>
+                                        <input
+                                            type="number"
+                                            name="price"
+                                            value={formData.price}
+                                            onChange={handleInputChange}
+                                            required={formData.isPaid}
+                                            min="0"
+                                            step="0.01"
+                                            placeholder="299"
+                                            style={{
+                                                width: '100%', padding: 'var(--space-3) var(--space-3) var(--space-3) 24px', borderRadius: 'var(--radius-md)',
+                                                border: '1px solid var(--color-border)', background: 'var(--color-bg)',
+                                                color: 'var(--color-text)', outline: 'none'
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </section>
 

@@ -14,9 +14,17 @@ interface EventData {
     capacity: number;
     attendeeCount: number;
     isRegistered: boolean;
+    isPaid: boolean;
+    price: number;
     college: {
         name: string;
     };
+}
+
+declare global {
+    interface Window {
+        Razorpay: any;
+    }
 }
 
 export default function EventDetailsPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
@@ -37,20 +45,78 @@ export default function EventDetailsPage({ params: paramsPromise }: { params: Pr
     }, [params.id]);
 
     const handleRegister = async () => {
+        if (!event) return;
         setRegistering(true);
+
         try {
-            const res = await fetch(`/api/events/${params.id}`, { method: 'POST' });
-            if (res.ok) {
-                setEvent(prev => prev ? { ...prev, isRegistered: true, attendeeCount: prev.attendeeCount + 1 } : null);
+            if (event.isPaid) {
+                // 1. Create Razorpay Order
+                const orderRes = await fetch('/api/razorpay/order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: event.price, eventId: event.id })
+                });
+
+                if (!orderRes.ok) throw new Error('Failed to create payment order');
+                const orderData = await orderRes.json();
+
+                // 2. Open Razorpay Checkout
+                const options = {
+                    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    name: "EventHUB",
+                    description: `Registration for ${event.title}`,
+                    order_id: orderData.orderId,
+                    handler: async function (response: any) {
+                        try {
+                            const verifyRes = await fetch('/api/razorpay/verify', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    ...response,
+                                    eventId: event.id
+                                })
+                            });
+
+                            if (verifyRes.ok) {
+                                setEvent(prev => prev ? { ...prev, isRegistered: true, attendeeCount: prev.attendeeCount + 1 } : null);
+                                alert('Payment successful! You are now registered.');
+                            } else {
+                                alert('Payment verification failed.');
+                            }
+                        } catch (err) {
+                            console.error('Verification error:', err);
+                            alert('An error occurred during verification.');
+                        }
+                    },
+                    prefill: {
+                        name: "", // Can be filled if we have user info
+                        email: "",
+                    },
+                    theme: {
+                        color: "#6366f1",
+                    }
+                };
+
+                const rzp = new window.Razorpay(options);
+                rzp.open();
             } else {
-                const data = await res.json();
-                if (res.status === 401) {
-                    router.push('/login');
+                // Free Registration
+                const res = await fetch(`/api/events/${params.id}`, { method: 'POST' });
+                if (res.ok) {
+                    setEvent(prev => prev ? { ...prev, isRegistered: true, attendeeCount: prev.attendeeCount + 1 } : null);
                 } else {
-                    alert(data.error || 'Failed to register');
+                    const data = await res.json();
+                    if (res.status === 401) {
+                        router.push('/login');
+                    } else {
+                        alert(data.error || 'Failed to register');
+                    }
                 }
             }
         } catch (error) {
+            console.error('Registration error:', error);
             alert('An error occurred. Please try again.');
         } finally {
             setRegistering(false);
@@ -184,14 +250,28 @@ export default function EventDetailsPage({ params: paramsPromise }: { params: Pr
                             ✓ You are Registered
                         </div>
                     ) : (
-                        <button
-                            onClick={handleRegister}
-                            disabled={registering || spotsLeft === 0}
-                            className="btn-primary"
-                            style={{ width: '100%', fontSize: '1.125rem', padding: 'var(--space-4)', opacity: (registering || spotsLeft === 0) ? 0.7 : 1 }}
-                        >
-                            {registering ? 'Registering...' : spotsLeft === 0 ? 'Waitlist Only' : 'Register Now (1-Click)'}
-                        </button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                            {event.isPaid && (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-2) var(--space-1)' }}>
+                                    <span style={{ fontWeight: 600 }}>Registration Fee</span>
+                                    <span style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-primary)' }}>₹{event.price}</span>
+                                </div>
+                            )}
+                            <button
+                                onClick={handleRegister}
+                                disabled={registering || spotsLeft === 0}
+                                className="btn-primary"
+                                style={{
+                                    width: '100%',
+                                    fontSize: '1.125rem',
+                                    padding: 'var(--space-4)',
+                                    opacity: (registering || spotsLeft === 0) ? 0.7 : 1,
+                                    background: event.isPaid ? 'var(--color-accent)' : 'var(--color-primary)'
+                                }}
+                            >
+                                {registering ? 'Processing...' : spotsLeft === 0 ? 'Waitlist Only' : event.isPaid ? `Pay ₹${event.price} & Register` : 'Register Now (Free)'}
+                            </button>
+                        </div>
                     )}
                     <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
                         By registering, you agree to the EventHUB terms and campus guidelines.

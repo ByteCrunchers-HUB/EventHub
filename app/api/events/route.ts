@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { title, category, date, location, description, capacity, imageUrl, certificateTemplateUrl } = body;
+        const { title, category, date, location, description, capacity, imageUrl, certificateTemplateUrl, isPaid, price } = body;
 
         // Use collegeId from token
         const collegeId = (body.collegeId || payload.collegeId) as string;
@@ -37,7 +37,9 @@ export async function POST(request: NextRequest) {
                 imageUrl,
                 certificateTemplateUrl,
                 collegeId,
-            },
+                isPaid: !!isPaid,
+                price: parseFloat(price as any) || 0,
+            } as any,
         });
 
         return NextResponse.json(event);

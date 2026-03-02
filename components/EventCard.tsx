@@ -8,6 +8,8 @@ export interface EventProps {
     location: string;
     organizer: string;
     imageUrl?: string;
+    isPaid?: boolean;
+    price?: number;
 }
 
 export default function EventCard({ event }: { event: EventProps }) {
@@ -43,18 +45,41 @@ export default function EventCard({ event }: { event: EventProps }) {
                 </div>
 
                 <div style={{ padding: 'var(--space-4)', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <div style={{
-                        display: 'inline-block',
-                        padding: 'var(--space-1) var(--space-2)',
-                        borderRadius: 'var(--radius-full)',
-                        background: 'var(--color-surface-hover)',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        color: 'var(--color-primary)',
-                        marginBottom: 'var(--space-2)',
-                        width: 'max-content'
-                    }}>
-                        {event.category}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-2)' }}>
+                        <div style={{
+                            display: 'inline-block',
+                            padding: 'var(--space-1) var(--space-2)',
+                            borderRadius: 'var(--radius-full)',
+                            background: 'var(--color-surface-hover)',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            color: 'var(--color-primary)',
+                        }}>
+                            {event.category}
+                        </div>
+                        {event.isPaid ? (
+                            <div style={{
+                                fontSize: '0.875rem',
+                                fontWeight: 700,
+                                color: 'var(--color-accent)',
+                                background: 'rgba(var(--hue-accent), 100%, 50%, 0.1)',
+                                padding: '2px 8px',
+                                borderRadius: 'var(--radius-md)'
+                            }}>
+                                ₹{event.price}
+                            </div>
+                        ) : (
+                            <div style={{
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                                color: '#10b981',
+                                background: 'rgba(16, 185, 129, 0.1)',
+                                padding: '2px 8px',
+                                borderRadius: 'var(--radius-md)'
+                            }}>
+                                FREE
+                            </div>
+                        )}
                     </div>
 
                     <h3 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-2)' }}>{event.title}</h3>

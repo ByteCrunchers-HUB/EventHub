@@ -74,6 +74,9 @@ export async function POST(
         });
 
         if (!event) return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+        if ((event as any).isPaid) {
+            return NextResponse.json({ error: 'This is a paid event. Please complete payment to register.' }, { status: 402 });
+        }
         if (event.attendees.length >= event.capacity) {
             return NextResponse.json({ error: 'Event is full' }, { status: 400 });
         }

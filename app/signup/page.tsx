@@ -108,16 +108,14 @@ export default function SignupPage() {
                         </select>
                     </div>
 
-                    {formData.accountType === 'college' && (
-                        <div className="animate-fade-in">
-                            <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.875rem', fontWeight: 500 }}>Institution Name</label>
-                            <input type="text" name="collegeName" required value={formData.collegeName} onChange={handleChange} placeholder="e.g. State University" style={{
-                                width: '100%', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)',
-                                border: '1px solid var(--color-border)', background: 'var(--color-surface)',
-                                color: 'var(--color-text)', outline: 'none'
-                            }} />
-                        </div>
-                    )}
+                    <div className="animate-fade-in">
+                        <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.875rem', fontWeight: 500 }}>University/Institution Name</label>
+                        <input type="text" name="collegeName" required value={formData.collegeName} onChange={handleChange} placeholder="e.g. State University" style={{
+                            width: '100%', padding: 'var(--space-3)', borderRadius: 'var(--radius-md)',
+                            border: '1px solid var(--color-border)', background: 'var(--color-surface)',
+                            color: 'var(--color-text)', outline: 'none'
+                        }} />
+                    </div>
 
                     <div>
                         <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.875rem', fontWeight: 500 }}>Password</label>
