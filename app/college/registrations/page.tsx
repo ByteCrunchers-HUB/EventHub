@@ -11,6 +11,7 @@ interface Registration {
         firstName: string;
         lastName: string;
         email: string;
+        college: { name: string } | null;
         collegeId: string;
     };
     event: {
@@ -139,6 +140,7 @@ export default function RegistrationsPage() {
                                     <tr style={{ background: 'var(--color-surface-hover)', borderBottom: '1px solid var(--color-border)' }}>
                                         <th style={{ padding: 'var(--space-3) var(--space-4)', fontWeight: 600, color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Name</th>
                                         <th style={{ padding: 'var(--space-3) var(--space-4)', fontWeight: 600, color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Email</th>
+                                        <th style={{ padding: 'var(--space-3) var(--space-4)', fontWeight: 600, color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>College</th>
                                         <th style={{ padding: 'var(--space-3) var(--space-4)', fontWeight: 600, color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Event</th>
                                         <th style={{ padding: 'var(--space-3) var(--space-4)', fontWeight: 600, color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Status</th>
                                         <th style={{ padding: 'var(--space-3) var(--space-4)', fontWeight: 600, color: 'var(--color-text-muted)', fontSize: '0.875rem', textAlign: 'right' }}>Actions</th>
@@ -149,6 +151,7 @@ export default function RegistrationsPage() {
                                         <tr key={reg.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                                             <td style={{ padding: 'var(--space-4)', fontWeight: 500 }}>{reg.user.firstName} {reg.user.lastName}</td>
                                             <td style={{ padding: 'var(--space-4)', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>{reg.user.email}</td>
+                                            <td style={{ padding: 'var(--space-4)', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>{reg.user.college?.name || 'N/A'}</td>
                                             <td style={{ padding: 'var(--space-4)', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>{reg.event.title}</td>
                                             <td style={{ padding: 'var(--space-4)' }}>
                                                 <span style={{

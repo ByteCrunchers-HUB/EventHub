@@ -26,6 +26,7 @@ interface EventData {
         capacity: number;
         category: string;
         attendeeCount: number;
+        college: { name: string };
     };
     attendees: Attendee[];
     registrationsByCollege: Record<string, number>;
@@ -115,6 +116,7 @@ export default function EventManagePage({ params: paramsPromise }: { params: Pro
                 <div>
                     <Link href="/college" style={{ color: 'var(--color-primary)', display: 'block', marginBottom: 'var(--space-2)', fontWeight: 600 }}>← Back to Overview</Link>
                     <h1 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-1)' }}>Manage: {event.title}</h1>
+                    <p style={{ color: 'var(--color-accent)', fontWeight: 600, fontSize: '1.25rem', marginBottom: 'var(--space-2)' }}>{event.college.name}</p>
                     <p style={{ color: 'var(--color-text-muted)' }}>Real-time student analysis and registration data.</p>
                 </div>
             </div>

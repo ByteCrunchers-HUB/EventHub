@@ -70,9 +70,6 @@ export default function Navbar() {
                 <nav className={`navbar-links ${isMenuOpen ? 'mobile-open' : ''}`}>
                     <Link href="/explore" className="nav-link" onClick={() => setIsMenuOpen(false)}>Explore</Link>
                     {user && (
-                        <Link href="/notifications" className="nav-link" onClick={() => setIsMenuOpen(false)}>Notifications</Link>
-                    )}
-                    {user && (
                         <Link href="/profile" className="nav-link" onClick={() => setIsMenuOpen(false)}>Profile</Link>
                     )}
                     {user && (user.role === 'COLLEGE_ADMIN' || user.role === 'SYSTEM_ADMIN') && (
@@ -87,24 +84,58 @@ export default function Navbar() {
                         user ? (
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                                    <div style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        borderRadius: '50%',
-                                        background: getAvatarColor(user.firstName),
-                                        color: 'white',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '0.75rem',
-                                        fontWeight: 700,
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                                    }}>
-                                        {getInitials(user.firstName, user.lastName)}
+                                    <Link
+                                        href="/notifications"
+                                        className="nav-link notification-bell"
+                                        style={{
+                                            padding: '8px',
+                                            borderRadius: '50%',
+                                            background: 'rgba(255, 255, 255, 0.05)',
+                                            lineHeight: 1,
+                                            fontSize: '1.25rem',
+                                            position: 'relative',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                            marginRight: 'var(--space-2)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                                        }}
+                                        title="Notifications"
+                                    >
+                                        🔔
+                                        <span style={{
+                                            position: 'absolute',
+                                            top: '6px',
+                                            right: '6px',
+                                            width: '8px',
+                                            height: '8px',
+                                            background: 'var(--color-accent)',
+                                            borderRadius: '50%',
+                                            border: '2px solid var(--color-bg)',
+                                            display: 'block'
+                                        }}></span>
+                                    </Link>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                                        <div style={{
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '50%',
+                                            background: getAvatarColor(user.firstName),
+                                            color: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 700,
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                        }}>
+                                            {getInitials(user.firstName, user.lastName)}
+                                        </div>
+                                        <span className="user-greeting" style={{ fontWeight: 600 }}>
+                                            {user.firstName}
+                                        </span>
                                     </div>
-                                    <span className="user-greeting" style={{ fontWeight: 600 }}>
-                                        {user.firstName}
-                                    </span>
                                 </div>
                                 <button onClick={handleLogout} className="btn-secondary logout-btn" style={{ padding: '4px 12px', fontSize: '0.8125rem' }}>
                                     Log Out

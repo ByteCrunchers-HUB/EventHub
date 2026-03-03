@@ -7,6 +7,7 @@ import AdminAnalytics from '@/components/AdminAnalytics';
 interface DashboardData {
     activeEvents: number;
     totalRegistrations: number;
+    collegeName: string;
     events: {
         id: string;
         title: string;
@@ -86,7 +87,7 @@ export default function CollegeDashboard() {
             <main style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--space-8)', minWidth: 0 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
                     <div>
-                        <h1 style={{ fontSize: '2rem', marginBottom: 'var(--space-1)' }}>Dashboard Overview</h1>
+                        <h1 style={{ fontSize: '2rem', marginBottom: 'var(--space-1)' }}>{data.collegeName} Dashboard</h1>
                         <p style={{ color: 'var(--color-text-muted)' }}>Welcome back. Here&apos;s what&apos;s happening tonight.</p>
                     </div>
                     <Link href="/college/create" className="btn-primary">

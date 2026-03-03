@@ -21,6 +21,11 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'College partition not found' }, { status: 404 });
         }
 
+        const college = await prisma.college.findUnique({
+            where: { id: user.collegeId },
+            select: { name: true }
+        });
+
         const events = await prisma.event.findMany({
             where: { collegeId: user.collegeId },
             include: {
@@ -33,6 +38,7 @@ export async function GET(request: NextRequest) {
         const activeEvents = events.filter(e => new Date(e.date) >= new Date()).length;
 
         return NextResponse.json({
+            collegeName: college?.name || 'Your College',
             activeEvents,
             totalRegistrations,
             events: events.map(e => ({

@@ -28,7 +28,13 @@ export async function GET(request: NextRequest) {
                 }
             },
             include: {
-                user: true,
+                user: {
+                    include: {
+                        college: {
+                            select: { name: true }
+                        }
+                    }
+                },
                 event: true
             },
             orderBy: {

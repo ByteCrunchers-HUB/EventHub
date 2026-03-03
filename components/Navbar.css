@@ -41,6 +41,12 @@
     color: var(--color-primary);
 }
 
+.notification-bell:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .navbar-actions {
     display: flex;
     gap: var(--space-4);
