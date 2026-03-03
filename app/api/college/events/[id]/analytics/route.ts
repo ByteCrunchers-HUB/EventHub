@@ -59,7 +59,8 @@ export async function GET(
                 location: event.location,
                 capacity: event.capacity,
                 category: event.category,
-                attendeeCount: event.attendees.length
+                attendeeCount: event.attendees.length,
+                college: { name: event.college.name }
             },
             attendees: event.attendees.map(a => ({
                 id: a.id,
