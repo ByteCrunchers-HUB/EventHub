@@ -37,6 +37,7 @@ interface User {
         broadcasts: any[]
     };
     registrations: Registration[];
+    broadcasts?: any[];
 }
 
 export default function ProfilePage() {
@@ -150,18 +151,18 @@ export default function ProfilePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-10)', minWidth: 0 }}>
 
                     {/* Notifications / Broadcasts */}
-                    {!isAdmin && user.college?.broadcasts && user.college.broadcasts.length > 0 && (
+                    {user.broadcasts && user.broadcasts.length > 0 && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <h3 style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                                    🔔 College Announcements
+                                    🔔 Campus Announcements
                                 </h3>
                                 <Link href="/notifications" className="nav-link" style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-primary)' }}>
                                     View All →
                                 </Link>
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                                {user.college.broadcasts.map((msg: any) => (
+                                {user.broadcasts.map((msg: any) => (
                                     <div key={msg.id} className="glass-panel" style={{
                                         padding: 'var(--space-4)',
                                         borderLeft: `4px solid ${msg.type === 'URGENT' ? '#ef4444' : 'var(--color-primary)'}`,

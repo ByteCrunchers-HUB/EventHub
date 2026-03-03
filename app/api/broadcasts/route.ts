@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        const collegeId = payload.collegeId as string;
+        const collegeId = payload.role === 'SYSTEM_ADMIN' ? null : payload.collegeId as string;
         const { title, message, type } = await request.json();
 
         if (!title || !message) {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
                 title,
                 message,
                 type: type || 'ANNOUNCEMENT',
-                collegeId
+                collegeId: collegeId
             }
         });
 
@@ -46,10 +46,19 @@ export async function GET(request: NextRequest) {
         if (!payload) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const collegeId = payload.collegeId as string;
-        if (!collegeId) return NextResponse.json([], { status: 200 });
+
+        // System Admins see everything, College Admins and Students see their college + Global
+        const where = payload.role === 'SYSTEM_ADMIN'
+            ? {}
+            : {
+                OR: [
+                    { collegeId: collegeId },
+                    { collegeId: null }
+                ]
+            };
 
         const broadcasts = await (prisma as any).broadcast.findMany({
-            where: { collegeId },
+            where,
             orderBy: { createdAt: 'desc' }
         });
 

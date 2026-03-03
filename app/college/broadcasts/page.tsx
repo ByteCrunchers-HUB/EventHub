@@ -127,6 +127,14 @@ export default function BroadcastsPage() {
                     </form>
                 </div>
 
+                {/* Sent History */}
+                <div>
+                    <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-4)' }}>Sent History</h2>
+                    <div className="glass-panel" style={{ padding: 'var(--space-4)' }}>
+                        <RecentBroadcastsList key={sending ? 'sending' : 'idle'} />
+                    </div>
+                </div>
+
                 <style jsx>{`
                     .sidebar-link {
                         padding: var(--space-2) var(--space-4);
@@ -145,6 +153,38 @@ export default function BroadcastsPage() {
                     }
                 `}</style>
             </main>
+        </div>
+    );
+}
+
+function RecentBroadcastsList() {
+    const [broadcasts, setBroadcasts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch('/api/broadcasts')
+            .then(res => res.ok ? res.json() : [])
+            .then(data => {
+                setBroadcasts(data);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
+    }, []);
+
+    if (loading) return <p>Loading sent history...</p>;
+    if (broadcasts.length === 0) return <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: 'var(--space-4)' }}>No broadcasts sent yet.</p>;
+
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+            {broadcasts.map(b => (
+                <div key={b.id} style={{ padding: 'var(--space-3)', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{b.title}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>{new Date(b.createdAt).toLocaleString()}</div>
+                    </div>
+                    <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'var(--color-surface-hover)' }}>{b.type}</span>
+                </div>
+            ))}
         </div>
     );
 }

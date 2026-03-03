@@ -27,11 +27,13 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Institution Name is required.' }, { status: 400 });
         }
 
+        const normalizedCollegeName = collegeName.trim();
+
         const college = await prisma.college.upsert({
-            where: { name: collegeName },
+            where: { name: normalizedCollegeName },
             update: {},
             create: {
-                name: collegeName,
+                name: normalizedCollegeName,
                 isVerified: role === 'COLLEGE_ADMIN' // Auto-verify if an admin signs up (or you can keep it false)
             }
         });

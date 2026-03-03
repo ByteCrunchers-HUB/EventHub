@@ -66,7 +66,19 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        return NextResponse.json(user);
+        // Fetch broadcasts separately to include Global ones
+        const broadcasts = await (prisma.broadcast as any).findMany({
+            where: {
+                OR: [
+                    { collegeId: user.collegeId },
+                    { collegeId: null }
+                ]
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 5
+        });
+
+        return NextResponse.json({ ...user, broadcasts });
     } catch (error) {
         console.error('Me error:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

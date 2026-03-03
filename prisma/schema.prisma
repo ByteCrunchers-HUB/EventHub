@@ -42,8 +42,8 @@ model Broadcast {
   type        String   @default("ANNOUNCEMENT") // ANNOUNCEMENT, URGENT, UPDATE
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  college     College  @relation(fields: [collegeId], references: [id])
-  collegeId   String
+  college     College? @relation(fields: [collegeId], references: [id])
+  collegeId   String?
 }
 
 model Event {
